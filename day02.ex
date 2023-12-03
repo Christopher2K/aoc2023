@@ -59,4 +59,41 @@ defmodule Day02 do
         IO.puts("Oopsy")
     end
   end
+
+  def run_part_2() do
+    case get_input() do
+      {:ok, content} ->
+        content
+        |> Enum.map(fn game_map ->
+          game_map.subsets
+          |> Enum.reduce(%{blue: 1, red: 1, green: 1}, fn subset, acc ->
+            blue_value =
+              if acc.blue > Map.get(subset, :blue, 0),
+                do: acc.blue,
+                else: subset.blue
+
+            red_value =
+              if acc.red > Map.get(subset, :red, 0),
+                do: acc.red,
+                else: subset.red
+
+            green_value =
+              if acc.green > Map.get(subset, :green, 0),
+                do: acc.green,
+                else: subset.green
+
+            %{
+              blue: blue_value,
+              red: red_value,
+              green: green_value
+            }
+          end)
+        end)
+        |> Enum.map(fn %{green: green, red: red, blue: blue} -> green * red * blue end)
+        |> Enum.sum()
+
+      _ ->
+        IO.puts("Oopsy")
+    end
+  end
 end
